@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateWeather() {
         try {
             // Fetch location data
-            const geoResponse = await fetch('http://ip-api.com/json/');
+            const geoResponse = await fetch('https://ip-api.com/json/');
             const geoData = await geoResponse.json();
             const { lat, lon } = geoData;
 
