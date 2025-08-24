@@ -18,3 +18,20 @@ body {
 .am-pm {
     font-size: 0.3em !important; /* Smaller but readable font size for AM/PM */
 }
+
+#weather {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+#weather-icon {
+    font-size: 4em;
+}
+
+#weather-temp {
+    font-size: 3em;
+    margin-left: 20px;
+}

@@ -24,4 +24,56 @@ document.addEventListener('DOMContentLoaded', () => {
     // Change background color initially and then every 5 seconds
     changeBackgroundColor();
     setInterval(changeBackgroundColor, 5000);
+
+    const weatherIconElement = document.getElementById('weather-icon');
+    const weatherTempElement = document.getElementById('weather-temp');
+
+    function getWeatherIcon(wmoCode) {
+        const icons = {
+            '0': '☀️', // Clear sky
+            '1': '🌤️', // Mainly clear
+            '2': '⛅️', // Partly cloudy
+            '3': '☁️', // Overcast
+            '45': '🌫️', // Fog
+            '48': '🌫️', // Depositing rime fog
+            '51': '💧', // Drizzle, light
+            '53': '💧', // Drizzle, moderate
+            '55': '💧', // Drizzle, dense
+            '61': '🌧️', // Rain, slight
+            '63': '🌧️', // Rain, moderate
+            '65': '🌧️', // Rain, heavy
+            '80': '🌦️', // Rain showers, slight
+            '81': '🌦️', // Rain showers, moderate
+            '82': '🌦️', // Rain showers, violent
+            '95': '⛈️', // Thunderstorm, slight or moderate
+            '96': '⛈️', // Thunderstorm with slight hail
+            '99': '⛈️', // Thunderstorm with heavy hail
+        };
+        return icons[wmoCode] || '❓';
+    }
+
+    async function updateWeather() {
+        try {
+            // Fetch location data
+            const geoResponse = await fetch('http://ip-api.com/json/');
+            const geoData = await geoResponse.json();
+            const { lat, lon } = geoData;
+
+            // Fetch weather data
+            const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+            const weatherData = await weatherResponse.json();
+            const { temperature, weathercode } = weatherData.current_weather;
+
+            // Update the DOM
+            weatherIconElement.innerHTML = getWeatherIcon(weathercode);
+            weatherTempElement.innerHTML = `${Math.round(temperature)}°C`;
+        } catch (error) {
+            console.error('Failed to fetch weather:', error);
+            weatherIconElement.innerHTML = '❓';
+            weatherTempElement.innerHTML = 'N/A';
+        }
+    }
+
+    // Update weather initially
+    updateWeather();
 });
