@@ -46,3 +46,19 @@ body::before {
     font-size: 3em;
     margin-left: 20px;
 }
+
+.background-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -2;
+    transition: transform 1s ease-in-out;
+}
+
+.background-slider.no-transition {
+    transition: none;
+}

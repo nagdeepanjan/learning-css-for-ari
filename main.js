@@ -68,18 +68,60 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update weather initially
     updateWeather();
 
-    async function updateBackground() {
+    const backgroundSliders = document.querySelectorAll('.background-slider');
+    let currentSlider = 0;
+    let isTransitioning = false;
+
+    async function updateBackground(isInitial = false) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
         try {
             const response = await fetch(`https://api.unsplash.com/photos/random?client_id=bGwbpOMPktYIGDod1fzJf2drp5PdF8nSQvH5Am987HM`);
             const photo = await response.json();
-            document.body.style.backgroundImage = `url(${photo.urls.regular})`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
+            const imageUrl = photo.urls.regular;
+
+            if (isInitial) {
+                backgroundSliders[currentSlider].style.backgroundImage = `url(${imageUrl})`;
+                backgroundSliders[currentSlider].style.transform = 'translate(0, 0)';
+                isTransitioning = false;
+                return;
+            }
+
+            const nextSlider = (currentSlider + 1) % 2;
+
+            backgroundSliders[nextSlider].style.backgroundImage = `url(${imageUrl})`;
+            backgroundSliders[nextSlider].classList.add('no-transition');
+
+            const directions = [
+                { transform: 'translateX(-100%)' }, // from left
+                { transform: 'translateX(100%)' },  // from right
+                { transform: 'translateY(-100%)' }, // from top
+                { transform: 'translateY(100%)' }   // from bottom
+            ];
+            const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+
+            backgroundSliders[nextSlider].style.transform = randomDirection.transform;
+
+            // Force reflow to apply the initial off-screen position before the transition
+            backgroundSliders[nextSlider].offsetHeight;
+
+            backgroundSliders[nextSlider].classList.remove('no-transition');
+
+            backgroundSliders[nextSlider].style.transform = 'translate(0, 0)';
+            backgroundSliders[currentSlider].style.transform = `translate(${parseInt(randomDirection.transform.split('(')[1]) * -1}%)`;
+
+            backgroundSliders[nextSlider].addEventListener('transitionend', () => {
+                currentSlider = nextSlider;
+                isTransitioning = false;
+            }, { once: true });
+
         } catch (error) {
             console.error('Failed to fetch background image:', error);
+            isTransitioning = false;
         }
     }
 
-    updateBackground();
+    updateBackground(true); // Initial background
     setInterval(updateBackground, 10000);
 });
