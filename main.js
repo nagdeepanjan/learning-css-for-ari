@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundSliders[currentSlider].style.transform = `translate(${parseInt(randomDirection.transform.split('(')[1]) * -1}%)`;
 
             backgroundSliders[nextSlider].addEventListener('transitionend', () => {
+                backgroundSliders[currentSlider].style.backgroundImage = 'none';
                 currentSlider = nextSlider;
                 isTransitioning = false;
             }, { once: true });
