@@ -123,5 +123,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateBackground(true); // Initial background
-    setInterval(updateBackground, 10000);
+    setInterval(updateBackground, 120000);
 });
