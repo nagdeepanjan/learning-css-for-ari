@@ -125,4 +125,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateBackground(true); // Initial background
     setInterval(updateBackground, 120000);
+
+    const photoColumn = document.querySelector('.photo-column');
+
+    async function updateNews() {
+        try {
+            const response = await fetch('https://saurav.tech/NewsAPI/top-headlines/category/general/us.json');
+            const newsData = await response.json();
+            const articles = newsData.articles.slice(0, 3); // Get the first 3 articles
+
+            photoColumn.innerHTML = ''; // Clear existing content
+
+            articles.forEach(article => {
+                if (!article.urlToImage || !article.title || !article.url) {
+                    return; // Skip articles with missing data
+                }
+
+                const newsItemLink = document.createElement('a');
+                newsItemLink.href = article.url;
+                newsItemLink.target = '_blank'; // Open in a new tab
+                newsItemLink.rel = 'noopener noreferrer';
+                newsItemLink.classList.add('news-item');
+
+                const img = document.createElement('img');
+                img.src = article.urlToImage;
+                img.alt = article.title;
+
+                const caption = document.createElement('div');
+                caption.classList.add('caption');
+                caption.textContent = article.title;
+
+                newsItemLink.appendChild(img);
+                newsItemLink.appendChild(caption);
+                photoColumn.appendChild(newsItemLink);
+            });
+        } catch (error) {
+            console.error('Failed to fetch news:', error);
+            photoColumn.innerHTML = '<p style="color: white; text-align: center;">Could not load news.</p>';
+        }
+    }
+
+    // Update news initially
+    updateNews();
 });
