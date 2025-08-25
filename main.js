@@ -16,15 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTime();
     setInterval(updateTime, 1000);
 
-    function changeBackgroundColor() {
-        const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-        document.body.style.backgroundColor = randomColor;
-    }
-
-    // Change background color initially and then every 5 seconds
-    changeBackgroundColor();
-    setInterval(changeBackgroundColor, 5000);
-
     const weatherIconElement = document.getElementById('weather-icon');
     const weatherTempElement = document.getElementById('weather-temp');
 
@@ -76,4 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update weather initially
     updateWeather();
+
+    async function updateBackground() {
+        try {
+            const response = await fetch(`https://api.unsplash.com/photos/random?client_id=bGwbpOMPktYIGDod1fzJf2drp5PdF8nSQvH5Am987HM`);
+            const photo = await response.json();
+            document.body.style.backgroundImage = `url(${photo.urls.regular})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+        } catch (error) {
+            console.error('Failed to fetch background image:', error);
+        }
+    }
+
+    updateBackground();
 });
