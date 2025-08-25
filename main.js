@@ -129,8 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoColumn = document.querySelector('.photo-column');
 
     async function updateNews() {
+        // TODO: Replace with your real API key from https://newsapi.org/
+        const apiKey = 'YOUR_API_KEY';
+        const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
+
         try {
-            const response = await fetch('https://saurav.tech/NewsAPI/top-headlines/category/general/us.json');
+            const response = await fetch(url);
             const newsData = await response.json();
             const articles = newsData.articles.slice(0, 3); // Get the first 3 articles
 
